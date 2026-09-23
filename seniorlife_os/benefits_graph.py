@@ -7,6 +7,7 @@ reviewed handoff package in graph state.
 
 from __future__ import annotations
 
+import os
 import hashlib
 import json
 from datetime import date
@@ -470,4 +471,11 @@ def build_benefits_graph(checkpointer: Any = None):
 
 
 # Plain invoke(initial_state) works when review_decision is already supplied.
-benefits_graph = build_benefits_graph()
+if __name__ == '__main__':
+    benefits_graph = build_benefits_graph()
+    if not os.path.exists('graphs_img/benefits_graph.png'):
+        from IPython.display import display, Image
+        img = Image(benefits_graph.get_graph().draw_mermaid_png())
+        with open('graphs_img/benefits_graph.png', 'wb') as file:
+            file.write(img.data)
+

@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from datetime import date
 from typing import Any, TypedDict
+import os
 
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import interrupt
@@ -297,8 +298,15 @@ def build_document_graph(checkpointer: Any = None):
         "continue": "publish_confirmed_version", "stop": END,
     })
     graph.add_edge("publish_confirmed_version", END)
+
     return graph.compile(checkpointer=checkpointer)
 
 
 # Plain invoke(initial_state) works when review_decision is already supplied.
-document_graph = build_document_graph()
+if __name__ == '__main__':
+    document_graph = build_document_graph()
+    if not os.path.exists('doc_graph.png'):
+        from IPython.display import display, Image
+        img = Image(document_graph.get_graph().draw_mermaid_png())
+        with open('doc_graph.png', 'wb') as file:
+            file.write(img.data)
